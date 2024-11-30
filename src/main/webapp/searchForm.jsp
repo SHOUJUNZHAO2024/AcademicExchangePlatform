@@ -102,6 +102,9 @@
         </select><br/>
 
         <button type="submit">Search</button>
+        <br>
+        <br>
+        <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </form>
 </body>
 </html>

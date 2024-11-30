@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Search Results</h1>
+
     <table border="1">
         <tr>
             <th>Institution</th>
@@ -30,10 +31,20 @@
                 <td>${course.preferredQualifications}</td>
                 <td>${course.deliveryMethod}</td>
                 <td>${course.compensation}</td>
+                <td>
+		            <form action="${pageContext.request.contextPath}/teachRequest/submit" method="post">
+		                <input type="hidden" name="courseId" value="${course.courseId}" />
+		                <button type="submit">Request to Teach</button>
+		            </form>
+        		</td>
             </tr>
         </c:forEach>
     </table>
     <a href="${pageContext.request.contextPath}/search/form">New Search</a>
+    
+        <br>
+        <br>
+        <a href="${pageContext.request.contextPath}/logout">Logout</a>
 
 </body>
 </html>

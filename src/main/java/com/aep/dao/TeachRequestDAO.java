@@ -67,6 +67,8 @@ public interface TeachRequestDAO {
      * @param notification the new notification status (true/false)
      */
     void updateTeachRequestNotification(int requestId, boolean notification);
+    
+    void submitTeachRequest(TeachRequestDTO teachRequest);
 
 }
 

@@ -41,7 +41,7 @@ public class ProfileController extends HttpServlet {
             String address = request.getParameter("address");
 
             institutionDAO.createInstitutionProfile(user.getUserId(), institutionName, address);
-            response.sendRedirect(request.getContextPath() + "/dashboardInstitution.jsp");
+            response.sendRedirect(request.getContextPath() + "/dashboardInstitution");
         } else if ("Professional".equals(user.getUserType())) {
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
@@ -51,7 +51,7 @@ public class ProfileController extends HttpServlet {
             String expertise = request.getParameter("expertise");
 
             professionalDAO.createProfessionalProfile(user.getUserId(), firstName, lastName, currentInstitution, academicPosition, educationBackground, expertise);
-            response.sendRedirect(request.getContextPath() + "/searchForm.jsp");
+            response.sendRedirect(request.getContextPath() + "/search/form");
         }
     }
 }

@@ -159,5 +159,20 @@ public class TeachRequestDAOImpl implements TeachRequestDAO {
         request.setNotification(rs.getBoolean("notification"));
         return request;
     }
+    
+    @Override
+    public void submitTeachRequest(TeachRequestDTO teachRequest) {
+        String sql = "INSERT INTO TeachRequest (course_id, professional_id, status, notification) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, teachRequest.getCourseId());
+            ps.setInt(2, teachRequest.getProfessionalId());
+            ps.setString(3, teachRequest.getStatus());
+            ps.setBoolean(4, teachRequest.isNotification());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -161,6 +161,7 @@ public class CourseDAOImpl implements CourseDAO {
 //        
 //    }
     
+    
     @Override
     public List<CourseDTO> searchCoursesByCriteria(String courseCode, String courseTitle, String institutionName, String term, String schedule, String deliveryMethod) {
         List<CourseDTO> courses = new ArrayList<>();
@@ -266,9 +267,10 @@ public class CourseDAOImpl implements CourseDAO {
         course.setPreferredQualifications(rs.getString("preferred_qualifications"));
         course.setDeliveryMethod(rs.getString("delivery_method"));
         course.setCompensation(rs.getBigDecimal("compensation"));
-        course.setInstitutionName(rs.getString("institution_name")); // Set the institution name
+//        course.setInstitutionName(rs.getString("institution_name")); // Set the institution name
         return course;
     }
+    
     
     @Override
     public List<String> getAllInstitutions() {
