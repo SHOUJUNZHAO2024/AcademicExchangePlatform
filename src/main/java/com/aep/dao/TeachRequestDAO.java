@@ -69,6 +69,15 @@ public interface TeachRequestDAO {
     void updateTeachRequestNotification(int requestId, boolean notification);
     
     void submitTeachRequest(TeachRequestDTO teachRequest);
+    
+    List<TeachRequestDTO> getNotifications(int professionalId);
+    
+    void createTeachRequest(TeachRequestDTO request);
+    void updateRequestStatus(int requestId, String status);
+    List<TeachRequestDTO> getTeachRequestsByInstitution(int institutionId);
+    
+    void setNotificationForProfessional(int requestId, boolean notification);
+    List<TeachRequestDTO> getNotificationsForProfessional(int professionalId);
 
 }
 

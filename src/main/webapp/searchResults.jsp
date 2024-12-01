@@ -32,7 +32,7 @@
                 <td>${course.deliveryMethod}</td>
                 <td>${course.compensation}</td>
                 <td>
-		            <form action="${pageContext.request.contextPath}/teachRequest/submit" method="post">
+		            <form action="${pageContext.request.contextPath}/teach/request" method="post">
 		                <input type="hidden" name="courseId" value="${course.courseId}" />
 		                <button type="submit">Request to Teach</button>
 		            </form>

@@ -4,14 +4,18 @@ import com.aep.dao.AcademicInstitutionDAO;
 import com.aep.dao.AcademicInstitutionDAOImpl;
 import com.aep.dao.AcademicProfessionalDAO;
 import com.aep.dao.AcademicProfessionalDAOImpl;
+import com.aep.dao.TeachRequestDAO;
+import com.aep.dao.TeachRequestDAOImpl;
 import com.aep.dao.UserDAO;
 import com.aep.dao.UserDAOImpl;
+import com.aep.model.TeachRequestDTO;
 import com.aep.model.UserDTO;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * UserController handles registration, login, and redirection flows.
@@ -23,12 +27,14 @@ public class UserController extends HttpServlet {
     private UserDAO userDAO;
     private AcademicProfessionalDAO professionalDAO;
     private AcademicInstitutionDAO institutionDAO;
+    private TeachRequestDAO teachRequestDAO;
 
     @Override
     public void init() {
         userDAO = new UserDAOImpl();
         professionalDAO = new AcademicProfessionalDAOImpl();
         institutionDAO = new AcademicInstitutionDAOImpl();
+        teachRequestDAO = new TeachRequestDAOImpl(); // Initialize TeachRequestDAO
     }
 
     @Override
@@ -95,12 +101,21 @@ public class UserController extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
+            
             // Check if user data already exists in the database
             if ("Professional".equals(user.getUserType())) {
+            	
+                
                 if (professionalDAO.existsByUserId(user.getUserId())) {
                     // Redirect to searchForm.jsp if data exists for Academic Professional
 //                    response.sendRedirect(request.getContextPath() + "/searchForm.jsp");
                     response.sendRedirect(request.getContextPath() + "/search/form");
+                    
+                    
+//                    // Fetch notifications for Academic Professional
+//                    List<TeachRequestDTO> notifications = teachRequestDAO.getNotifications(user.getUserId());
+//                    session.setAttribute("notifications", notifications);
+                    
                 } else {
                     // Redirect to profileCreate.jsp if no data exists
                     response.sendRedirect(request.getContextPath() + "/profileCreate.jsp");
@@ -118,4 +133,6 @@ public class UserController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login.jsp?error=Invalid credentials");
         }
     }
+    
+    
 }

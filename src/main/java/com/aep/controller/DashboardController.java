@@ -2,7 +2,10 @@ package com.aep.controller;
 
 import com.aep.dao.CourseDAO;
 import com.aep.dao.CourseDAOImpl;
+import com.aep.dao.TeachRequestDAO;
+import com.aep.dao.TeachRequestDAOImpl;
 import com.aep.model.CourseDTO;
+import com.aep.model.TeachRequestDTO;
 import com.aep.model.UserDTO;
 
 import jakarta.servlet.ServletException;
@@ -18,10 +21,12 @@ import java.util.List;
 public class DashboardController extends HttpServlet {
 
     private CourseDAO courseDAO;
+    private TeachRequestDAO teachRequestDAO;
 
     @Override
     public void init() {
         courseDAO = new CourseDAOImpl();
+        teachRequestDAO = new TeachRequestDAOImpl();
     }
 
     @Override
@@ -45,6 +50,13 @@ public class DashboardController extends HttpServlet {
 
         // Set the courses in the request scope
         request.setAttribute("courses", courses);
+        
+        
+        // Fetch teach requests for the institution
+        List<TeachRequestDTO> teachRequests = teachRequestDAO.getTeachRequestsByInstitution(user.getUserId());
+        request.setAttribute("teachRequests", teachRequests);
+        
+        
 
         // Forward to dashboardInstitution.jsp
         request.getRequestDispatcher("/dashboardInstitution.jsp").forward(request, response);

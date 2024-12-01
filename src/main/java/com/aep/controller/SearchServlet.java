@@ -2,7 +2,11 @@ package com.aep.controller;
 
 import com.aep.dao.CourseDAO;
 import com.aep.dao.CourseDAOImpl;
+import com.aep.dao.TeachRequestDAO;
+import com.aep.dao.TeachRequestDAOImpl;
 import com.aep.model.CourseDTO;
+import com.aep.model.TeachRequestDTO;
+import com.aep.model.UserDTO;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,6 +25,7 @@ import java.util.List;
 public class SearchServlet extends HttpServlet {
 
     private CourseDAO courseDAO;
+    private TeachRequestDAO teachRequestDAO; // Declare TeachRequestDAO
 
     /**
      * Initializes the SearchServlet with a CourseDAO implementation.
@@ -28,6 +33,7 @@ public class SearchServlet extends HttpServlet {
     @Override
     public void init() {
         courseDAO = new CourseDAOImpl();
+        teachRequestDAO = new TeachRequestDAOImpl(); // Initialize TeachRequestDAO
     }
 
     /**
@@ -80,22 +86,37 @@ public class SearchServlet extends HttpServlet {
     /**
      * Displays the search form for academic professionals.
      * Populates dropdown lists dynamically with available data.
-     * 
+     * Also fetches notifications for the logged-in user.
+     *
      * @param request  the HttpServletRequest object
      * @param response the HttpServletResponse object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException      if an input/output error occurs
      */
     private void displaySearchForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp?error=Session expired. Please log in again.");
+            return;
+        }
+
+        // Fetch logged-in user
+        UserDTO user = (UserDTO) session.getAttribute("user");
+
         // Fetch data for dropdowns
         List<String> institutions = courseDAO.getAllInstitutions();
-
-        // Set attributes for the dropdown lists
         request.setAttribute("institutions", institutions);
+
+        // If the user is a Professional, fetch notifications
+        if ("Professional".equals(user.getUserType())) {
+            List<TeachRequestDTO> notifications = teachRequestDAO.getNotificationsForProfessional(user.getUserId());
+            request.setAttribute("notifications", notifications);
+        }
 
         // Forward to searchForm.jsp
         request.getRequestDispatcher("/searchForm.jsp").forward(request, response);
     }
+
 
     /**
      * Handles the search operation by processing search criteria and forwarding results to a JSP page.

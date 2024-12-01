@@ -70,10 +70,40 @@
             </c:if>
         </tbody>
     </table>
-
     <br/>
     <a href="createCourse.jsp">Create a New Course</a>
     <br/>
+    
+<h3>Requests to Teach</h3>
+<table border="1">
+    <tr>
+        <th>Request ID</th>
+        <th>Course Title</th>
+        <th>Professional Name</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+<c:forEach var="request" items="${teachRequests}">
+    <tr>
+        <td>${request.requestId}</td>
+        <td>${request.courseTitle}</td>
+        <td>${request.professionalName}</td>
+        <td>${request.status}</td>
+        <td>
+            <form action="${pageContext.request.contextPath}/teach/respond" method="post" style="display:inline;">
+                <input type="hidden" name="requestId" value="${request.requestId}" />
+                <input type="hidden" name="action" value="accept" />
+                <button type="submit">Accept</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/teach/respond" method="post" style="display:inline;">
+                <input type="hidden" name="requestId" value="${request.requestId}" />
+                <input type="hidden" name="action" value="reject" />
+                <button type="submit">Reject</button>
+            </form>
+        </td>
+    </tr>
+</c:forEach>
+
     
     <h3>Messages</h3>
     <c:if test="${not empty param.message}">

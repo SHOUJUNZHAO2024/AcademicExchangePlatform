@@ -7,6 +7,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Display success message if present in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                alert('You have successfully requested to teach this course!');
+            }
+
             // Fetch course codes when an institution is selected
             $('#institutionName').change(function () {
                 var institutionName = $(this).val();
@@ -102,6 +108,21 @@
         </select><br/>
 
         <button type="submit">Search</button>
+        
+		<c:if test="${not empty notifications}">
+		    <h3>Notifications</h3>
+		    <ul>
+		        <c:forEach var="notification" items="${notifications}">
+		            <li>
+		                Your request to teach <strong>${notification.courseTitle}</strong> 
+		                for the institution <strong>${notification.institutionName}</strong> 
+		                is <strong>${notification.status}</strong>.
+		            </li>
+		        </c:forEach>
+		    </ul>
+		</c:if>
+
+
         <br>
         <br>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>

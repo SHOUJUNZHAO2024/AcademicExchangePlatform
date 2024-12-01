@@ -8,13 +8,15 @@ package com.aep.model;
 public class TeachRequestDTO {
     private int requestId;
     private int courseId;
-    private int professionalId;
-    private String status;
+    private int professionalId;  
+	private String status;
     private boolean notification;
     private String courseCode;
     private String term;
     private String institutionName;
 
+    private String professionalName;
+    private String courseTitle;
     // Getters and Setters
 
     public String getCourseCode() {
@@ -80,4 +82,20 @@ public class TeachRequestDTO {
     public void setNotification(boolean notification) {
         this.notification = notification;
     }
+    
+    public String getProfessionalName() {
+		return professionalName;
+	}
+
+	public void setProfessionalName(String professionalName) {
+		this.professionalName = professionalName;
+	}
+
+	public String getCourseTitle() {
+		return courseTitle;
+	}
+
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
+	}
 }
