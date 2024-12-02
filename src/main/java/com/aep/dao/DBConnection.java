@@ -1,7 +1,3 @@
-/**
- * Purpose: Double Checked Locking Singleton class to manage a single database connection instance.
- */
-
 package com.aep.dao;
 
 import java.sql.Connection;
@@ -9,10 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- *@author SHOUJUN ZHAO
- *@version 1.0, November 2024
- *@since javac 17.0.10
- *
  * This class ensures that only one instance of a database connection
  * is created and reused throughout the application.
  */

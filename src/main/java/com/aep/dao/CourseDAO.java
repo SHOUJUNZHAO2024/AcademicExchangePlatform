@@ -33,14 +33,6 @@ public interface CourseDAO {
     List<CourseDTO> getCoursesByInstitution(int institutionId);
 
     /**
-     * Searches courses by institution name.
-     *
-     * @param institutionName the name of the institution
-     * @return a list of courses offered by the institution
-     */
-    List<CourseDTO> getCoursesByInstitutionName(String institutionName);
-
-    /**
      * Searches courses by multiple criteria.
      *
      * @param courseCode the course code
@@ -67,11 +59,27 @@ public interface CourseDAO {
      */
     void deleteCourse(int courseId);
     
+    /**
+     * Fetches the names of all institutions offering courses.
+     *
+     * @return a list of institution names
+     */
     List<String> getAllInstitutions();
-    List<String> getAllCourseCodes();
-    List<String> getAllCourseTitles();
     
+    /**
+     * Fetches course codes offered by a specific institution.
+     *
+     * @param institutionName the name of the institution
+     * @return a list of course codes offered by the institution
+     */
     List<String> getCourseCodesByInstitution(String institutionName);
+    
+    /**
+     * Fetches course titles associated with a specific course code.
+     *
+     * @param courseCode the course code
+     * @return a list of course titles associated with the course code
+     */
     List<String> getCourseTitlesByCourseCode(String courseCode);
 
 

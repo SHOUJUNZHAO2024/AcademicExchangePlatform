@@ -1,24 +1,21 @@
 package com.aep.dao;
 
-import com.aep.model.AcademicProfessionalDTO;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implementation of the AcademicProfessionalDAO interface.
- * 
  * Handles database interactions for the AcademicProfessional table.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 public class AcademicProfessionalDAOImpl implements AcademicProfessionalDAO {
 
+    /**
+     * Database connection object used for executing SQL queries.
+     */
     private Connection connection;
 
     /**
-     * Constructor initializes the database connection.
+     * Constructor initializes the database connection using a singleton DBConnection instance.
      */
     public AcademicProfessionalDAOImpl() {
         try {
@@ -27,79 +24,29 @@ public class AcademicProfessionalDAOImpl implements AcademicProfessionalDAO {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void addAcademicProfessional(AcademicProfessionalDTO professional) {
-        String sql = "INSERT INTO AcademicProfessional (professional_id, first_name, last_name, current_institution, academic_position, education_background, expertise) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, professional.getProfessionalId());
-            ps.setString(2, professional.getFirstName());
-            ps.setString(3, professional.getLastName());
-            ps.setString(4, professional.getCurrentInstitution());
-            ps.setString(5, professional.getAcademicPosition());
-            ps.setString(6, professional.getEducationBackground());
-            ps.setString(7, professional.getExpertise());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public AcademicProfessionalDTO getAcademicProfessionalById(int professionalId) {
-        String sql = "SELECT * FROM AcademicProfessional WHERE professional_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, professionalId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToProfessional(rs);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public List<AcademicProfessionalDTO> getAllAcademicProfessionals() {
-        List<AcademicProfessionalDTO> professionals = new ArrayList<>();
-        String sql = "SELECT * FROM AcademicProfessional";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                professionals.add(mapResultSetToProfessional(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return professionals;
-    }
-
-    /**
-     * Helper method to map a ResultSet row to an AcademicProfessionalDTO object.
-     * 
-     * @param rs the ResultSet
-     * @return an AcademicProfessionalDTO object
-     * @throws SQLException if a database access error occurs
-     */
-    private AcademicProfessionalDTO mapResultSetToProfessional(ResultSet rs) throws SQLException {
-        AcademicProfessionalDTO professional = new AcademicProfessionalDTO();
-        professional.setProfessionalId(rs.getInt("professional_id"));
-        professional.setFirstName(rs.getString("first_name"));
-        professional.setLastName(rs.getString("last_name"));
-        professional.setCurrentInstitution(rs.getString("current_institution"));
-        professional.setAcademicPosition(rs.getString("academic_position"));
-        professional.setEducationBackground(rs.getString("education_background"));
-        professional.setExpertise(rs.getString("expertise"));
-        return professional;
-    }
     
+    /**
+     * Creates a professional profile for the given user ID.
+     *
+     * @param userId the user ID of the professional
+     * @param firstName the first name of the professional
+     * @param lastName the last name of the professional
+     * @param currentInstitution the current institution where the professional is employed
+     * @param academicPosition the academic position of the professional (e.g., Professor, Lecturer)
+     * @param educationBackground the educational background of the professional
+     * @param expertise the area of expertise of the professional
+     */
     @Override
     public void createProfessionalProfile(int userId, String firstName, String lastName, String currentInstitution,
                                           String academicPosition, String educationBackground, String expertise) {
         String sql = "INSERT INTO AcademicProfessional (professional_id, first_name, last_name, current_institution, academic_position, education_background, expertise) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        if (userId <= 0 || firstName == null || lastName == null || currentInstitution == null ||
+        	    academicPosition == null || educationBackground == null || expertise == null) {
+        	    throw new IllegalArgumentException("Invalid input data for creating professional profile");
+        	}
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setString(2, firstName);
@@ -114,6 +61,12 @@ public class AcademicProfessionalDAOImpl implements AcademicProfessionalDAO {
         }
     }
     
+    /**
+     * Checks if a professional profile exists for the given user ID.
+     *
+     * @param userId the user ID to check
+     * @return true if a profile exists, false otherwise
+     */
     @Override
     public boolean existsByUserId(int userId) {
         String sql = "SELECT 1 FROM AcademicProfessional WHERE professional_id = ?";

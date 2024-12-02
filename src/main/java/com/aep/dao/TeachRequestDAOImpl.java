@@ -12,11 +12,12 @@ import java.util.List;
  * 
  * Provides methods to create, read, and update teach requests in the database.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 public class TeachRequestDAOImpl implements TeachRequestDAO {
 
+    /**
+     * Database connection object used for executing SQL queries.
+     */
     private Connection connection;
 
     /**
@@ -30,174 +31,11 @@ public class TeachRequestDAOImpl implements TeachRequestDAO {
         }
     }
 
-    @Override
-    public void addTeachRequest(TeachRequestDTO request) {
-        String sql = "INSERT INTO TeachRequest (course_id, professional_id, status, notification) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, request.getCourseId());
-            ps.setInt(2, request.getProfessionalId());
-            ps.setString(3, request.getStatus());
-            ps.setBoolean(4, request.isNotification());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public TeachRequestDTO getTeachRequestById(int requestId) {
-        String sql = "SELECT * FROM TeachRequest WHERE request_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, requestId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToTeachRequest(rs);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public List<TeachRequestDTO> getTeachRequestsByProfessional(int professionalId) {
-        List<TeachRequestDTO> requests = new ArrayList<>();
-        String sql = "SELECT * FROM TeachRequest WHERE professional_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, professionalId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                requests.add(mapResultSetToTeachRequest(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return requests;
-    }
-
-    @Override
-    public List<TeachRequestDTO> getTeachRequestsByCourse(int courseId) {
-        List<TeachRequestDTO> requests = new ArrayList<>();
-        String sql = "SELECT * FROM TeachRequest WHERE course_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, courseId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                requests.add(mapResultSetToTeachRequest(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return requests;
-    }
-    
-    @Override
-    public List<TeachRequestDTO> getNotificationsByProfessional(int professionalId) {
-        List<TeachRequestDTO> notifications = new ArrayList<>();
-        String sql = "SELECT tr.*, c.course_code, c.term, ai.institution_name " +
-                     "FROM TeachRequest tr " +
-                     "JOIN Course c ON tr.course_id = c.course_id " +
-                     "JOIN AcademicInstitution ai ON c.institution_id = ai.institution_id " +
-                     "WHERE tr.professional_id = ? AND tr.notification = true";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, professionalId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                TeachRequestDTO notification = new TeachRequestDTO();
-                notification.setRequestId(rs.getInt("request_id"));
-                notification.setCourseId(rs.getInt("course_id"));
-                notification.setProfessionalId(rs.getInt("professional_id"));
-                notification.setStatus(rs.getString("status"));
-                notification.setCourseCode(rs.getString("course_code"));
-                notification.setTerm(rs.getString("term"));
-                notification.setInstitutionName(rs.getString("institution_name"));
-                notifications.add(notification);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return notifications;
-    }
-
-    @Override
-    public void updateTeachRequestStatus(int requestId, String status) {
-        String sql = "UPDATE TeachRequest SET status = ? WHERE request_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, status);
-            ps.setInt(2, requestId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void updateTeachRequestNotification(int requestId, boolean notification) {
-        String sql = "UPDATE TeachRequest SET notification = ? WHERE request_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setBoolean(1, notification);
-            ps.setInt(2, requestId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
-     * Helper method to map a ResultSet row to a TeachRequestDTO object.
+     * Creates a new teach request and stores it in the database.
      * 
-     * @param rs the ResultSet
-     * @return a TeachRequestDTO object
-     * @throws SQLException if a database access error occurs
+     * @param request the {@link TeachRequestDTO} object containing details of the teach request
      */
-    private TeachRequestDTO mapResultSetToTeachRequest(ResultSet rs) throws SQLException {
-        TeachRequestDTO request = new TeachRequestDTO();
-        request.setRequestId(rs.getInt("request_id"));
-        request.setCourseId(rs.getInt("course_id"));
-        request.setProfessionalId(rs.getInt("professional_id"));
-        request.setStatus(rs.getString("status"));
-        request.setNotification(rs.getBoolean("notification"));
-        return request;
-    }
-    
-    @Override
-    public void submitTeachRequest(TeachRequestDTO teachRequest) {
-        String sql = "INSERT INTO TeachRequest (course_id, professional_id, status, notification) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, teachRequest.getCourseId());
-            ps.setInt(2, teachRequest.getProfessionalId());
-            ps.setString(3, teachRequest.getStatus());
-            ps.setBoolean(4, teachRequest.isNotification());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public List<TeachRequestDTO> getNotifications(int professionalId) {
-        List<TeachRequestDTO> notifications = new ArrayList<>();
-        String sql = "SELECT tr.*, c.course_code, c.term, ai.institution_name "
-                   + "FROM TeachRequest tr "
-                   + "JOIN Course c ON tr.course_id = c.course_id "
-                   + "JOIN AcademicInstitution ai ON c.institution_id = ai.institution_id "
-                   + "WHERE tr.professional_id = ? AND tr.notification = TRUE";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, professionalId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                TeachRequestDTO notification = new TeachRequestDTO();
-                notification.setCourseCode(rs.getString("course_code"));
-                notification.setTerm(rs.getString("term"));
-                notification.setInstitutionName(rs.getString("institution_name"));
-                notification.setStatus(rs.getString("status"));
-                notifications.add(notification);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return notifications;
-    }
-
     @Override
     public void createTeachRequest(TeachRequestDTO request) {
         String sql = "INSERT INTO TeachRequest (course_id, professional_id, status, notification) VALUES (?, ?, ?, ?)";
@@ -212,19 +50,30 @@ public class TeachRequestDAOImpl implements TeachRequestDAO {
         }
     }
     
+    /**
+     * Updates the status of a teach request (e.g., Pending, Accepted, Rejected).
+     * 
+     * @param requestId the ID of the teach request
+     * @param status the new status of the request
+     */
     @Override
-    public void updateRequestStatus(int requestId, String status) {
-        String sql = "UPDATE TeachRequest SET status = ?, notification = ? WHERE request_id = ?";
+    public void updateTeachRequestStatus(int requestId, String status) {
+        String sql = "UPDATE TeachRequest SET status = ? WHERE request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, status);
-            ps.setBoolean(2, true); // Notification set to true
-            ps.setInt(3, requestId);
+            ps.setInt(2, requestId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Retrieves a list of teach requests associated with a specific institution.
+     * 
+     * @param institutionId the ID of the institution
+     * @return a list of {@link TeachRequestDTO} objects representing the teach requests
+     */
     @Override
     public List<TeachRequestDTO> getTeachRequestsByInstitution(int institutionId) {
         String sql = "SELECT tr.request_id, c.course_title, p.first_name, p.last_name, tr.status " +
@@ -250,7 +99,12 @@ public class TeachRequestDAOImpl implements TeachRequestDAO {
         return requests;
     }
 
-
+    /**
+     * Sets the notification flag for a specific teach request.
+     * 
+     * @param requestId    the ID of the teach request
+     * @param notification the notification flag to set (true to enable, false to disable)
+     */
     @Override
     public void setNotificationForProfessional(int requestId, boolean notification) {
         String sql = "UPDATE TeachRequest SET notification = ? WHERE request_id = ?";
@@ -263,6 +117,12 @@ public class TeachRequestDAOImpl implements TeachRequestDAO {
         }
     }
     
+    /**
+     * Retrieves a list of teach requests with notifications enabled for a specific professional.
+     * 
+     * @param professionalId the ID of the academic professional
+     * @return a list of {@link TeachRequestDTO} objects representing the notifications
+     */
     @Override
     public List<TeachRequestDTO> getNotificationsForProfessional(int professionalId) {
         List<TeachRequestDTO> notifications = new ArrayList<>();

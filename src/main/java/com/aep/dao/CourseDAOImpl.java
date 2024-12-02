@@ -9,12 +9,12 @@ import java.util.List;
  * Implementation of the CourseDAO interface.
  * Handles database interactions for the Course table.
  * 
- * @author
- * @version 1.0, November 2024
- * @since javac 17.0.10
  */
 public class CourseDAOImpl implements CourseDAO {
 
+    /**
+     * Database connection object used for executing SQL queries.
+     */
     private Connection connection;
 
     /**
@@ -28,6 +28,11 @@ public class CourseDAOImpl implements CourseDAO {
         }
     }
 
+    /**
+     * Creates a new course in the database.
+     *
+     * @param course the Course object to be added
+     */
     @Override
     public void createCourse(CourseDTO course) {
         String sql = "INSERT INTO Course (institution_id, course_title, course_code, term, outline, schedule, preferred_qualifications, delivery_method, compensation) "
@@ -48,6 +53,12 @@ public class CourseDAOImpl implements CourseDAO {
         }
     }
 
+    /**
+     * Fetches a course by its ID.
+     *
+     * @param courseId the ID of the course to fetch
+     * @return the Course object, or null if not found
+     */
     @Override
     public CourseDTO getCourseById(int courseId) {
         String sql = "SELECT * FROM Course WHERE course_id = ?";
@@ -63,6 +74,12 @@ public class CourseDAOImpl implements CourseDAO {
         return null;
     }
 
+    /**
+     * Fetches all courses offered by a specific institution.
+     *
+     * @param institutionId the ID of the institution
+     * @return a list of courses offered by the institution
+     */
     @Override
     public List<CourseDTO> getCoursesByInstitution(int institutionId) {
         List<CourseDTO> courses = new ArrayList<>();
@@ -79,89 +96,17 @@ public class CourseDAOImpl implements CourseDAO {
         return courses;
     }
 
-    @Override
-    public List<CourseDTO> getCoursesByInstitutionName(String institutionName) {
-        List<CourseDTO> courses = new ArrayList<>();
-        String sql = "SELECT c.* FROM Course c JOIN AcademicInstitution ai ON c.institution_id = ai.institution_id "
-                   + "WHERE ai.institution_name = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, institutionName);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                courses.add(mapResultSetToCourse(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courses;
-    }
-
-//    @Override
-//    public List<CourseDTO> searchCoursesByCriteria(String courseCode, String courseTitle, String institutionName, String term, String schedule, String deliveryMethod) {
-//        List<CourseDTO> courses = new ArrayList<>();
-////        StringBuilder sql = new StringBuilder("SELECT c.* FROM Course c JOIN AcademicInstitution ai ON c.institution_id = ai.institution_id WHERE 1=1 ");
-//      StringBuilder sql = new StringBuilder("SELECT c.*, ai.institution_name \r\n"
-//      		+ "FROM Course c \r\n"
-//      		+ "JOIN AcademicInstitution ai ON c.institution_id = ai.institution_id \r\n"
-//      		+ "WHERE (c.course_code = ? OR ? IS NULL)\r\n"
-//      		+ "  AND (c.course_title LIKE ? OR ? IS NULL)\r\n"
-//      		+ "  AND (ai.institution_name = ? OR ? IS NULL)\r\n"
-//      		+ "  AND (c.term = ? OR ? IS NULL)\r\n"
-//      		+ "  AND (c.schedule = ? OR ? IS NULL)\r\n"
-//      		+ "  AND (c.delivery_method = ? OR ? IS NULL)\r\n"
-//      		+ " ");
-//        if (courseCode != null && !courseCode.isEmpty()) {
-//            sql.append("AND c.course_code = ? ");
-//        }
-//        if (courseTitle != null && !courseTitle.isEmpty()) {
-//            sql.append("AND c.course_title LIKE ? ");
-//        }
-//        if (institutionName != null && !institutionName.isEmpty()) {
-//            sql.append("AND ai.institution_name = ? ");
-//        }
-//        if (term != null && !term.isEmpty()) {
-//            sql.append("AND c.term = ? ");
-//        }
-//        if (schedule != null && !schedule.isEmpty()) {
-//            sql.append("AND c.schedule = ? ");
-//        }
-//        if (deliveryMethod != null && !deliveryMethod.isEmpty()) {
-//            sql.append("AND c.delivery_method = ? ");
-//        }
-//
-//        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-//            int index = 1;
-//            if (courseCode != null && !courseCode.isEmpty()) {
-//                ps.setString(index++, courseCode);
-//            }
-//            if (courseTitle != null && !courseTitle.isEmpty()) {
-//                ps.setString(index++, "%" + courseTitle + "%");
-//            }
-//            if (institutionName != null && !institutionName.isEmpty()) {
-//                ps.setString(index++, institutionName);
-//            }
-//            if (term != null && !term.isEmpty()) {
-//                ps.setString(index++, term);
-//            }
-//            if (schedule != null && !schedule.isEmpty()) {
-//                ps.setString(index++, schedule);
-//            }
-//            if (deliveryMethod != null && !deliveryMethod.isEmpty()) {
-//                ps.setString(index++, deliveryMethod);
-//            }
-//
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                courses.add(mapResultSetToCourse(rs));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return courses;
-//        
-//    }
-    
-    
+    /**
+     * Searches courses by multiple criteria.
+     *
+     * @param courseCode the course code
+     * @param courseTitle the course title
+     * @param institutionName the institution name
+     * @param term the term
+     * @param schedule the schedule
+     * @param deliveryMethod the delivery method
+     * @return a list of courses matching the criteria
+     */
     @Override
     public List<CourseDTO> searchCoursesByCriteria(String courseCode, String courseTitle, String institutionName, String term, String schedule, String deliveryMethod) {
         List<CourseDTO> courses = new ArrayList<>();
@@ -207,13 +152,14 @@ public class CourseDAOImpl implements CourseDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        // Debug: Print the retrieved courses
-        System.out.println("DAO Search Results: " + courses);
         return courses;
     }
 
-    
+    /**
+     * Updates an existing course in the database.
+     *
+     * @param course the Course object with updated details
+     */
     @Override
     public void updateCourse(CourseDTO course) {
         String sql = "UPDATE Course SET course_title = ?, term = ?, outline = ?, schedule = ?, compensation = ? WHERE course_id = ?";
@@ -230,7 +176,6 @@ public class CourseDAOImpl implements CourseDAO {
         }
     }
     
-
     /**
      * Deletes a course from the database by its ID.
      *
@@ -246,7 +191,6 @@ public class CourseDAOImpl implements CourseDAO {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Helper method to map a ResultSet row to a Course object.
@@ -271,7 +215,11 @@ public class CourseDAOImpl implements CourseDAO {
         return course;
     }
     
-    
+    /**
+     * Fetches the names of all institutions offering courses.
+     *
+     * @return a list of institution names
+     */
     @Override
     public List<String> getAllInstitutions() {
         String sql = "SELECT DISTINCT institution_name FROM AcademicInstitution";
@@ -284,40 +232,15 @@ public class CourseDAOImpl implements CourseDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Institutions fetched: " + institutions); // Debug log
         return institutions;
     }
-
-    @Override
-    public List<String> getAllCourseCodes() {
-        String sql = "SELECT DISTINCT course_code FROM Course";
-        List<String> courseCodes = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                courseCodes.add(rs.getString("course_code"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courseCodes;
-    }
-
-    @Override
-    public List<String> getAllCourseTitles() {
-        String sql = "SELECT DISTINCT course_title FROM Course";
-        List<String> courseTitles = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                courseTitles.add(rs.getString("course_title"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courseTitles;
-    }
     
+    /**
+     * Fetches course codes offered by a specific institution.
+     *
+     * @param institutionName the name of the institution
+     * @return a list of course codes offered by the institution
+     */
     @Override
     public List<String> getCourseCodesByInstitution(String institutionName) {
         List<String> courseCodes = new ArrayList<>();
@@ -336,6 +259,12 @@ public class CourseDAOImpl implements CourseDAO {
         return courseCodes;
     }
 
+    /**
+     * Fetches course titles associated with a specific course code.
+     *
+     * @param courseCode the course code
+     * @return a list of course titles associated with the course code
+     */
     @Override
     public List<String> getCourseTitlesByCourseCode(String courseCode) {
         List<String> courseTitles = new ArrayList<>();

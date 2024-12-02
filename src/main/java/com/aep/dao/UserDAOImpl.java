@@ -9,18 +9,18 @@ import java.sql.SQLException;
 
 /**
  * Implementation of the UserDAO interface.
- * 
  * Handles database interactions for the User table.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 public class UserDAOImpl implements UserDAO {
 
+    /**
+     * Database connection object used for executing SQL queries.
+     */
     private Connection connection;
 
     /**
-     * Constructor initializes the database connection.
+     * Constructor initializes the database connection using a singleton DBConnection instance.
      */
     public UserDAOImpl() {
         try {
@@ -30,6 +30,11 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    /**
+     * Creates a new user in the database.
+     * 
+     * @param user the UserDTO object representing the user to be added
+     */
     @Override
     public void createUser(UserDTO user) {
         String sql = "INSERT INTO User (username, password, email, user_type) VALUES (?, ?, ?, ?)";
@@ -45,6 +50,12 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    /**
+     * Fetches a user from the database by their username.
+     * 
+     * @param username the username of the user to fetch
+     * @return a UserDTO object representing the fetched user, or null if no user is found
+     */
     @Override
     public UserDTO getUserByUsername(String username) {
         String sql = "SELECT * FROM User WHERE username = ?";
@@ -60,6 +71,13 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    /**
+     * Authenticates a user by their username and password.
+     * 
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return true if authentication is successful, false otherwise
+     */
     @Override
     public boolean authenticateUser(String username, String password) {
         String sql = "SELECT * FROM User WHERE username = ? AND password = ?";

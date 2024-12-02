@@ -1,3 +1,12 @@
+/**
+ * File name: UserDTO.java
+ * Author: Group10
+ * Course: CST8288-section 031
+ * Term: Fall2024
+ * Assignment: Final Project
+ * Date: November 30
+ * Purpose: UserDTO represents a user in the system.
+ */
 package com.aep.model;
 
 /**
@@ -6,10 +15,30 @@ package com.aep.model;
  * 
  */
 public class UserDTO {
+
+    /**
+     * The unique ID of the user.
+     */
     private int userId;
+
+    /**
+     * The username of the user.
+     */
     private String username;
+
+    /**
+     * The password of the user.
+     */
     private String password;
+
+    /**
+     * The email address of the user.
+     */
     private String email;
+
+    /**
+     * The type of the user, which can be either "Professional" or "Institution".
+     */
     private String userType;
 
     /**

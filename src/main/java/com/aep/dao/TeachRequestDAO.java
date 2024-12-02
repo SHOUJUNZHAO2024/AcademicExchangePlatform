@@ -6,52 +6,18 @@ import java.util.List;
 /**
  * TeachRequestDAO interface defines methods for interacting with the TeachRequest table in the database.
  * 
- * Provides CRUD operations and methods to fetch or update teach requests.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 public interface TeachRequestDAO {
 
-    /**
-     * Adds a new teach request to the database.
-     * 
-     * @param request the TeachRequestDTO object to add
-     */
-    void addTeachRequest(TeachRequestDTO request);
 
     /**
-     * Fetches a teach request by its ID.
+     * Creates a new teach request and stores it in the database.
      * 
-     * @param requestId the ID of the teach request
-     * @return the TeachRequestDTO object, or null if not found
+     * @param request the {@link TeachRequestDTO} object containing details of the teach request
      */
-    TeachRequestDTO getTeachRequestById(int requestId);
-
-    /**
-     * Fetches all teach requests for a specific academic professional.
-     * 
-     * @param professionalId the ID of the academic professional
-     * @return a list of TeachRequestDTO objects
-     */
-    List<TeachRequestDTO> getTeachRequestsByProfessional(int professionalId);
+    void createTeachRequest(TeachRequestDTO request);
     
-    /**
-     * Retrieves notifications for a specific academic professional.
-     * 
-     * @param professionalId the ID of the academic professional
-     * @return a list of TeachRequestDTO objects representing the notifications
-     */
-    List<TeachRequestDTO> getNotificationsByProfessional(int professionalId);
-
-    /**
-     * Fetches all teach requests for a specific course.
-     * 
-     * @param courseId the ID of the course
-     * @return a list of TeachRequestDTO objects
-     */
-    List<TeachRequestDTO> getTeachRequestsByCourse(int courseId);
-
     /**
      * Updates the status of a teach request (e.g., Pending, Accepted, Rejected).
      * 
@@ -61,22 +27,27 @@ public interface TeachRequestDAO {
     void updateTeachRequestStatus(int requestId, String status);
 
     /**
-     * Updates the notification status of a teach request.
+     * Retrieves a list of teach requests associated with a specific institution.
      * 
-     * @param requestId the ID of the teach request
-     * @param notification the new notification status (true/false)
+     * @param institutionId the ID of the institution
+     * @return a list of {@link TeachRequestDTO} objects representing the teach requests
      */
-    void updateTeachRequestNotification(int requestId, boolean notification);
-    
-    void submitTeachRequest(TeachRequestDTO teachRequest);
-    
-    List<TeachRequestDTO> getNotifications(int professionalId);
-    
-    void createTeachRequest(TeachRequestDTO request);
-    void updateRequestStatus(int requestId, String status);
     List<TeachRequestDTO> getTeachRequestsByInstitution(int institutionId);
     
+    /**
+     * Sets the notification flag for a specific teach request.
+     * 
+     * @param requestId    the ID of the teach request
+     * @param notification the notification flag to set (true to enable, false to disable)
+     */
     void setNotificationForProfessional(int requestId, boolean notification);
+    
+    /**
+     * Retrieves a list of teach requests with notifications enabled for a specific professional.
+     * 
+     * @param professionalId the ID of the academic professional
+     * @return a list of {@link TeachRequestDTO} objects representing the notifications
+     */
     List<TeachRequestDTO> getNotificationsForProfessional(int professionalId);
 
 }

@@ -4,11 +4,8 @@ import com.aep.model.UserDTO;
 
 /**
  * UserDAO interface defines methods for interacting with the User table in the database.
- * 
  * It provides CRUD operations and user authentication methods.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 public interface UserDAO {
 

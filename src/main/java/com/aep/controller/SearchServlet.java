@@ -18,14 +18,19 @@ import java.util.List;
  * SearchServlet handles search functionality for academic professionals to find courses based on various criteria.
  * Maps to URL patterns for managing search requests.
  * 
- * @author 
- * @version 1.1, November 2024
  */
 @WebServlet("/search/*")
 public class SearchServlet extends HttpServlet {
 
+    /**
+     * DAO for interacting with the Course table in the database.
+     */
     private CourseDAO courseDAO;
-    private TeachRequestDAO teachRequestDAO; // Declare TeachRequestDAO
+    
+    /**
+     * DAO for interacting with the TeachRequest table in the database.
+     */
+    private TeachRequestDAO teachRequestDAO; 
 
     /**
      * Initializes the SearchServlet with a CourseDAO implementation.
@@ -33,7 +38,7 @@ public class SearchServlet extends HttpServlet {
     @Override
     public void init() {
         courseDAO = new CourseDAOImpl();
-        teachRequestDAO = new TeachRequestDAOImpl(); // Initialize TeachRequestDAO
+        teachRequestDAO = new TeachRequestDAOImpl();
     }
 
     /**

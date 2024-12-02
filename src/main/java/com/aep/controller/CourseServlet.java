@@ -12,15 +12,15 @@ import java.math.BigDecimal;
 
 /**
  * CourseServlet handles course-related actions such as creating, updating, and deleting course listings.
- * 
  * Maps to URL patterns for managing course requests.
  * 
- * @author 
- * @version 1.0, November 2024
  */
 @WebServlet("/course/*")
 public class CourseServlet extends HttpServlet {
 
+    /**
+     * DAO for interacting with the Course table in the database.
+     */
     private CourseDAO courseDAO;
 
     /**

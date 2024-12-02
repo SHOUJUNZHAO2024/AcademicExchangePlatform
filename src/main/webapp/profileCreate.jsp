@@ -105,9 +105,6 @@
             </c:if>
             <button type="submit">Save Profile</button>
         </form>
-        <p class="note">
-            Need help? <a href="${pageContext.request.contextPath}/help">Contact support</a>
-        </p>
     </div>
 </body>
 </html>
