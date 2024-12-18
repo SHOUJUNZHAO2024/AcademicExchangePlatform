@@ -1,7 +1,7 @@
 # Academic Exchange Platform
 
 ## Overview
-The **Academic Exchange Platform** is a web-based application designed to connect academic institutions and professionals. It provides an efficient platform for institutions to manage courses and for professionals to apply to teach those courses. Key features include dynamic search functionality, role-specific dashboards, and real-time notifications.
+The **Academic Exchange Platform** is a web-based application designed to bridge the gap between academic institutions and professionals. The platform facilitates efficient communication and collaboration by enabling institutions to manage courses and academic professionals to apply to teach these courses. Key features include dynamic search functionality, role-specific dashboards, and notifications.
 
 ---
 
@@ -34,9 +34,5 @@ The **Academic Exchange Platform** is a web-based application designed to connec
 
 ---
 
-## Setup Instructions
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo-url.git
-   cd AcademicExchangePlatform
+## Contact
+For any inquiries, please reach out via email at zhao0282@algonquinlive.com.
