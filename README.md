@@ -3,6 +3,10 @@
 ## Overview
 The **Academic Exchange Platform** is a web-based application designed to bridge the gap between academic institutions and professionals. The platform facilitates efficient communication and collaboration by enabling institutions to manage courses and academic professionals to apply to teach these courses. Key features include dynamic search functionality, role-specific dashboards, and notifications.
 
+## Author
+**Shoujun Zhao**
+- Email: zhao0282@algonquinlive.com
+
 ---
 
 ## Features
@@ -10,7 +14,7 @@ The **Academic Exchange Platform** is a web-based application designed to bridge
 ### For Academic Professionals:
 - **Search Courses:** Filter courses by institution, course code, schedule, term, and delivery method.
 - **Request to Teach:** Submit teaching requests for specific courses.
-- **Notifications:** Stay updated on the status of teaching requests (accepted/rejected).
+- **Notifications:** Receive updates on the status of teaching requests (accepted/rejected).
 
 ### For Academic Institutions:
 - **Course Management:** Create, update, and delete courses with comprehensive details.
